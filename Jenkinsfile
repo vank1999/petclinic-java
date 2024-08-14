@@ -74,5 +74,11 @@ pipeline {
         }
       }
 
+      stage('Deploy using docker') {
+            steps {
+               sh "docker run -d --name petclinic -p 8082:8082 vank1999/petclinic:latest"
+            }
+        }
+
     }
 }
