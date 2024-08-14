@@ -53,5 +53,26 @@ pipeline {
             }
         }
 
+        stage('Docker Build') {
+            steps {
+               script{
+                   withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                    sh "docker build -t  petclinic . "
+                 }
+            }
+        }
+      }
+
+        stage('Docker Push') {
+            steps {
+               script{
+                   withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                    sh "docker tag devopscicd vank1999/petclinic:latest"
+                    sh "docker push  vank1999/petclinic:latest "
+                 }
+            }
+        }
+      }
+
     }
 }
