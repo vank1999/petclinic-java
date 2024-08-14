@@ -30,6 +30,12 @@ pipeline {
             }
         }
 
+        stage('Trivy scan') {
+            steps {
+                sh 'trivy fs --format table -o trivy-fs-report.html .'
+            }
+        }
+
         stage('sonarqube-analysis'){
             steps{
               withSonarQubeEnv('sonar') {
@@ -57,9 +63,15 @@ pipeline {
             steps {
                script{
                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
-                    sh "docker build -t  petclinic . "
+                    sh "docker build -t  vank1999/petclinic:latest . "
                  }
             }
+        }
+      }
+
+      stage('Trivy Scan Image') {
+        steps {
+        sh "trivy image --format table -o trivy-image-report.html vank1999/petclinic:latest"
         }
       }
 
@@ -67,7 +79,6 @@ pipeline {
             steps {
                script{
                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
-                    sh "docker tag petclinic vank1999/petclinic:latest"
                     sh "docker push  vank1999/petclinic:latest "
                  }
             }
