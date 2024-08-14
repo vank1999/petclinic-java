@@ -6,6 +6,10 @@ pipeline {
         maven 'maven3'
     }
 
+    environment{
+        SCANNER_HOME= tool 'sonar-scanner'
+    }
+
     stages{
         stage('Git-checkout'){
             steps{
@@ -23,6 +27,16 @@ pipeline {
         stage('unit-tests'){
             steps{
               sh "mvn test"
+            }
+        }
+
+        stage('sonarqube-analysis'){
+            steps{
+              withSonarQubeEnv('sonar') {
+                  sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Petclinic \
+                   -Dsonar.java.binaries=. \
+                   -Dsonar.projectKey=Petclinic '''
+                }
             }
         }
 
