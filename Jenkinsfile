@@ -82,7 +82,7 @@ pipeline {
 
     stage('Deploy to Tomcat') {
             steps {
-               sh "  cp /var/lib/jenkins/workspace/petclinic/target/petclinic.war /opt/tomcat/webapps/ "
+               sh " sudo cp /var/lib/jenkins/workspace/petclinic/target/petclinic.war /opt/tomcat/webapps/ "
             }
         }
 
